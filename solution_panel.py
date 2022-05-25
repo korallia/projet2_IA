@@ -257,8 +257,8 @@ class ShapeTransformationOptimizerSolutionPanel(SolutionPanel):
         self.__current_shape_height = 0
 
         #METTRE POINTS MILIEU À 0
-        self.bon_vieux_pentagone = [QPointF(0, -5), QPointF(5, 0), QPointF(5, 5), QPointF(-5, 5) ,QPointF(-5, 0)]
-        self.bon_vieux_triangle = [QPointF(-10, -5), QPointF(10, -5), QPointF(0, 5)]
+        self.__bon_vieux_pentagone = [QPointF(0, -5), QPointF(5, 0), QPointF(5, 5), QPointF(-5, 5) ,QPointF(-5, 0)]
+        self.__bon_vieux_triangle = [QPointF(-10, -5), QPointF(10, -5), QPointF(0, 5)]
         self.__bon_vieux_rectangle = [QPointF(-10, -5), QPointF(10, -5),QPointF(10, 5), QPointF(-10, 5)]
         self.__canvas_coordinates = [QPointF(0, 0), QPointF(700, 500)] 
 

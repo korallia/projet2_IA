@@ -501,42 +501,17 @@ class ShapeTransformationOptimizerSolutionPanel(SolutionPanel):
 class CellTowerCoverageOptimizerSolutionPanel(SolutionPanel):
     def __init__(self):
         self.__tab_parametres = []
-        self.__total_area = 0
         self.__tableau_tours = [0,0,0,0]
         self.__domain_names = None
-        self.define_domain_names(self.__tableau_tours)
-        # self.__domain_names = np.array([["Coupe:"], ["Coupe:"],["Coupe:"],["Coupe:"],["Coupe:"],["Coupe:"], ["Coupe:"], ["Coupe:"]])
-        self.__nb_total_tours = 0
+        self.__define_domain_names(self.__tableau_tours)
         self.__problem_name = "Cell Tower Coverage Optimizer"
         self.__description = "After selecting the number of cities that need cell tower coverage, generate them with the GENERATE button, then adjust their X and Y positions, as well as their radius by cycling through them with the combobox. When you are satisfied with the positioning, start the Genetic algorithm by pressing START to witness in real-time as the AI finds the optimal positioning of the towers. A price will be determined which depends on the area that needs to be covered, as well as the coverage offered by differently-sized cell towers and their current market price. To potentially achieve better results, modify the Genetic Algorithm's parameters and/or try the new Mutation strategy, as it will explore more of the surface in search of an optimal result." 
         self.__summary = "Determine the optimal placement of Cell towers in a region in order to offer the neighboring cities access to the wireless network."
-        self.__default_parametres = None
-        # self.__nb_tiny_towers = 1
-        # self.__nb_small_tower = 1
-        # self.__nb_medium_tower = 1
-        # self.__nb_large_tower = 1
-        
-
-        self.__city_coordinates = []
-
-
 
         super().__init__(self.__problem_name, self.__description, self.__summary)
 
-        # self.__city_number = 3
-        self.__budget = 0
-        self.__map_width = 0
-        self.__map_height = 0
         self.__cities = []
-        # self.__tab_parametres.append(self.__cities)
-        self.__ratio_covered = 0
-        self.__total_price = 0
         self.__city_quantity = 0
-        
-
-        # self.__nb_de_villes = 0
-        # self.__villes = [probleme_3_classe_utilitaire.Ville(100,100,50, "BloopVille"), probleme_3_classe_utilitaire.Ville(250,150,42,"FuckOffCity"), probleme_3_classe_utilitaire.Ville(300,200,75,"Sorel")]
-
 
         self.__tab_parametres.append(700)
         self.__tab_parametres.append(500)
@@ -550,17 +525,6 @@ class CellTowerCoverageOptimizerSolutionPanel(SolutionPanel):
 
         self.__canvas_coordinates = [QPointF(0, 0), QPointF(500, 500)]
 
-        # self.__dictonary_form = {"--": None,
-        #                          # "Tower 1": self.__tower_one,
-        #                          # "Tower 2": self.__tower_two,
-        #                          # "Tower 3": self.__tower_tree
-        #                          # "Tower 4": self.__tower_tree
-        #                          }
-        
-
-        #CREATE WIDGIES
-        # ADD PARAMETERS WIDGIES
-        #SET WIDGIES
 
         self.__main_layout = QHBoxLayout()
 
@@ -573,89 +537,15 @@ class CellTowerCoverageOptimizerSolutionPanel(SolutionPanel):
         self.__city_quantity_value_label = QLabel()
         self.__generate_cities_button = QPushButton("Generate cities")
 
-        # self.__budget_scrollbar_layout = QHBoxLayout()
-        # self.__budget_text_label = QLabel("Budget:")
-        # self.__budget_scrollbar = QScrollBar()
-        # self.__budget_value_label = QLabel(f"{self.__budget}px")
-
-        # self.__map_width_scrollbar_layout = QHBoxLayout()
-        # self.__map_width_text_label = QLabel("Map width")
-        # self.__map_width_scrollbar = QScrollBar()
-        # self.__map_width_scrollbar_value = QLabel(f"{self.__budget}")
-        # self.__map_width_scrollbar_help_button = QPushButton("!")
-
-        # self.__map_height_scrollbar_layout = QHBoxLayout()
-        # self.__map_height_text_label = QLabel("Map height")
-        # self.__map_height_scrollbar = QScrollBar()
-        # self.__map_height_scrollbar_value = QLabel(f"{self.__budget}")
-        # self.__map_height_scrollbar_help_button = QPushButton("!")
-
-
         self.__city_selection_layout = QHBoxLayout()
         self.__city_selection_text = QLabel("City")
         self.__city_selection_combobox = QComboBox()
-
-        self.__city_quantity_scrollbar.minimum = 0
-        self.__city_quantity_scrollbar.maximum = 50
-        self.__city_quantity_scrollbar.value = self.__visualization_pixmap_width
-        self.__city_quantity_scrollbar.fixed_width = 50
-
-        self.__city_quantity_scrollbar.orientation = Qt.Horizontal
-
-        # self.__budget_scrollbar.minimum = 0
-        # self.__budget_scrollbar.maximum = 1000000000
-        # self.__budget_scrollbar.value = self.__visualization_pixmap_height
-        # self.__budget_scrollbar.fixed_width = 50
 
         self.__visualization_groupbox = QGroupBox("Visualization")
         self.__visualization_layout = QVBoxLayout()
         self.__visualization_label = QLabel()
         self.__visualization_pixmap = QPixmap(700, 500)
 
-        self.__visualization_label.set_fixed_size(
-            QSize(self.__visualization_label_width, self.__visualization_label_height))
-        self.__visualization_pixmap.scaled(QSize(self.__visualization_pixmap_width, self.__visualization_pixmap_height))
-        self.__visualization_label.style_sheet = "border:1px solid black; background-color: #204774"
-        self.__visualization_pixmap.fill(QtGui.QColor("lightblue"))
-
-        self.__visualization_label.pixmap = self.__visualization_pixmap
-
-        
-        # self.__budget_scrollbar.orientation = Qt.Horizontal
-        # self.__map_width_scrollbar.orientation = Qt.Horizontal
-        # self.__map_width_scrollbar.maximum = 50
-        # self.__map_height_scrollbar.orientation = Qt.Horizontal
-        # self.__map_height_scrollbar.maximum = 50
-
-        self.__city_quantity_scrollbar_layout.add_widget(self.__city_quantity_text_label)
-        self.__city_quantity_scrollbar_layout.add_widget(self.__city_quantity_scrollbar)
-        self.__city_quantity_scrollbar_layout.add_widget(self.__city_quantity_value_label)
-
-        # self.__budget_scrollbar_layout.add_widget(self.__budget_text_label)
-        # self.__budget_scrollbar_layout.add_widget(self.__budget_scrollbar)
-        # self.__budget_scrollbar_layout.add_widget(self.__budget_value_label)
-
-        # self.__map_width_scrollbar_layout.add_widget(self.__map_width_text_label)
-        # self.__map_width_scrollbar_layout.add_widget(self.__map_width_scrollbar)
-        # self.__map_width_scrollbar_layout.add_widget(self.__map_width_scrollbar_value)
-
-        # self.__map_height_scrollbar_layout.add_widget(self.__map_height_text_label)
-        # self.__map_height_scrollbar_layout.add_widget(self.__map_height_scrollbar)
-        # self.__map_height_scrollbar_layout.add_widget(self.__map_height_scrollbar_value)
-
-        self.__city_selection_layout.add_widget(self.__city_selection_text)
-        self.__city_selection_layout.add_widget(self.__city_selection_combobox)
-
-        self.__parameters_layout.add_stretch()
-        self.__parameters_layout.add_layout(self.__city_quantity_scrollbar_layout)
-        self.__parameters_layout.add_widget(self.__generate_cities_button)
-        # self.__parameters_layout.add_layout(self.__budget_scrollbar_layout)
-        # self.__parameters_layout.add_layout(self.__map_width_scrollbar_layout)
-        # self.__parameters_layout.add_layout(self.__map_height_scrollbar_layout)
-        self.__parameters_layout.add_layout(self.__city_selection_layout)
-        self.__parameters_layout.add_stretch()
-
-        # City
         self.__city_groupbox = QGroupBox("City")
         self.__city_layout = QVBoxLayout()
         self.__city_name_layout = QHBoxLayout()
@@ -669,34 +559,60 @@ class CellTowerCoverageOptimizerSolutionPanel(SolutionPanel):
         self.__city_radius_text_label = QLabel("Radius:")
 
         self.__city_x_coordinate_scrollbar = QScrollBar()
-        self.__city_x_coordinate_scrollbar.orientation = Qt.Horizontal
-        self.__city_x_coordinate_scrollbar.minimum = 0
-        self.__city_x_coordinate_scrollbar.maximum = 500
-
         self.__city_y_coordinate_scrollbar = QScrollBar()
-        self.__city_y_coordinate_scrollbar.orientation = Qt.Horizontal
-        self.__city_y_coordinate_scrollbar.minimum = 0
-        self.__city_y_coordinate_scrollbar.maximum = 500
-
         self.__city_radius_scrollbar = QScrollBar()
-        self.__city_radius_scrollbar.orientation = Qt.Horizontal
-        self.__city_radius_scrollbar.minimum = 0
-        self.__city_radius_scrollbar.maximum = 100
-
-
         self.__city_x_coordinate_label = QLabel()
         self.__city_y_coordinate_label = QLabel()
         self.__city_radius_label = QLabel()
 
-
-        # Rename
         self.__rename_city_layout = QHBoxLayout()
-        # self.__rename_city_text_edit = QInputDialog()
-        # self.__rename_city_text_edit.set_window_title("pipi")
 
-        # self.__rename_city_layout.add_widget(self.__rename_city_text_edit)
+        self.__city_quantity_scrollbar.minimum = 0
+        self.__city_quantity_scrollbar.maximum = 50
+        self.__city_quantity_scrollbar.value = self.__visualization_pixmap_width
+        self.__city_quantity_scrollbar.fixed_width = 50
 
-        # Rename End
+        self.__city_quantity_scrollbar.orientation = Qt.Horizontal
+
+        self.__visualization_label.set_fixed_size(
+            QSize(self.__visualization_label_width, self.__visualization_label_height))
+        self.__visualization_pixmap.scaled(QSize(self.__visualization_pixmap_width, self.__visualization_pixmap_height))
+        self.__visualization_label.style_sheet = "border:1px solid black; background-color: #204774"
+        self.__visualization_pixmap.fill(QtGui.QColor("lightblue"))
+
+        self.__visualization_label.pixmap = self.__visualization_pixmap
+
+        self.__city_x_coordinate_scrollbar.orientation = Qt.Horizontal
+        self.__city_x_coordinate_scrollbar.minimum = 0
+        self.__city_x_coordinate_scrollbar.maximum = 500
+
+        self.__city_y_coordinate_scrollbar.orientation = Qt.Horizontal
+        self.__city_y_coordinate_scrollbar.minimum = 0
+        self.__city_y_coordinate_scrollbar.maximum = 500
+
+        self.__city_radius_scrollbar.orientation = Qt.Horizontal
+        self.__city_radius_scrollbar.minimum = 0
+        self.__city_radius_scrollbar.maximum = 100
+
+        self.__city_quantity_scrollbar.valueChanged.connect(self.__update_city_quantity)
+        self.__generate_cities_button.clicked.connect(self.__generate_city_objects)
+        self.__city_selection_combobox.currentIndexChanged.connect(self.__update_city_selection)
+        self.__city_x_coordinate_scrollbar.valueChanged.connect(self.__update_scroll_selection)
+        self.__city_y_coordinate_scrollbar.valueChanged.connect(self.__update_scroll_selection)
+        self.__city_radius_scrollbar.valueChanged.connect(self.__update_scroll_selection)
+
+        self.__city_quantity_scrollbar_layout.add_widget(self.__city_quantity_text_label)
+        self.__city_quantity_scrollbar_layout.add_widget(self.__city_quantity_scrollbar)
+        self.__city_quantity_scrollbar_layout.add_widget(self.__city_quantity_value_label)
+
+        self.__city_selection_layout.add_widget(self.__city_selection_text)
+        self.__city_selection_layout.add_widget(self.__city_selection_combobox)
+
+        self.__parameters_layout.add_stretch()
+        self.__parameters_layout.add_layout(self.__city_quantity_scrollbar_layout)
+        self.__parameters_layout.add_widget(self.__generate_cities_button)
+        self.__parameters_layout.add_layout(self.__city_selection_layout)
+        self.__parameters_layout.add_stretch()
 
         self.__city_name_layout.add_widget(self.__city_name_text_label)
         self.__city_x_coordinate_layout.add_widget(self.__city_x_coordinate_text_label)
@@ -717,8 +633,6 @@ class CellTowerCoverageOptimizerSolutionPanel(SolutionPanel):
         self.__city_layout.add_layout(self.__city_y_coordinate_layout)
         self.__city_layout.add_layout(self.__city_radius_layout)
 
-
-        # City end
         self.__visualization_layout.add_widget(self.__visualization_label)
         self.__parameters_groupbox.set_layout(self.__parameters_layout)
         self.__visualization_groupbox.set_layout(self.__visualization_layout)
@@ -730,41 +644,14 @@ class CellTowerCoverageOptimizerSolutionPanel(SolutionPanel):
 
         self.set_layout(self.__main_layout)
 
-        #Connect
-        self.__city_quantity_scrollbar.valueChanged.connect(self.__update_problem_parameters)
-        # self.__budget_scrollbar.valueChanged.connect(self.update_scroll)
-        # self.__map_width_scrollbar.valueChanged.connect(self.update_scroll)
-
-        self.__generate_cities_button.clicked.connect(self.generate_city_objects)
-
-        self.__city_selection_combobox.currentIndexChanged.connect(self.update_city_selection)
-        self.__city_x_coordinate_scrollbar.valueChanged.connect(self.update_scroll_selection)
-        self.__city_y_coordinate_scrollbar.valueChanged.connect(self.update_scroll_selection)
-        self.__city_radius_scrollbar.valueChanged.connect(self.update_scroll_selection)
-
-
-        #Connect End
-        #self.generate_city_objects()
-
-
-
-    @property
-    def visualization_pixmap_width(self):
-        return self.__visualization_pixmap_width
-
-    @property
-    def visualization_pixmap_height(self):
-        return self.__visualization_pixmap_height
 
     @property
     def problem_definition(self):
-        # test = self.define_domain_names()
         cell_tower_coverage_optimizer_solution = CellTowerCoverageOptimizerSolution(self.__tab_parametres, self.__domain_names)
-
         return  cell_tower_coverage_optimizer_solution.probleme_definition
 
     @Slot()
-    def generate_city_objects(self):
+    def __generate_city_objects(self):
         self.__cities.clear()
         for i in range(self.__city_quantity):
             ville = outils.Ville(f"City{i}")
@@ -772,36 +659,138 @@ class CellTowerCoverageOptimizerSolutionPanel(SolutionPanel):
             ville.y = random.randrange(0, self.__visualization_pixmap_height)
             ville.radius = random.randrange(0, 50)
             ville.area = pi*(ville.radius**2)
-            # new_city = [f"City{i}", random.randrange(0, self.__visualization_pixmap_width), #GENERE X
-            #             random.randrange(0, self.__visualization_pixmap_height), 
-            #             random.randrange(0, 100)] #RAYON
             self.__cities.append(ville)
-        self.fill_city_combobox()
-        self.update_city_selection
+        self.__fill_city_combobox()
+        self.__update_city_selection
         self.__tab_parametres[3] = self.__cities
-        self.find_total_nb_of_each_tower()
-        self.problem_definition
+        self.__find_total_nb_of_each_tower()
+
 
     @Slot()
-    def fill_city_combobox(self):
+    def __fill_city_combobox(self):
         self.__city_selection_combobox.clear()
         for city in self.__cities:
             self.__city_selection_combobox.add_item(city.nom)
-        self.problem_definition
+
 
     #À RETOUCHER
     @Slot()
-    def __update_problem_parameters(self):
+    def __update_city_quantity(self):
         self.__city_quantity = self.__city_quantity_scrollbar.value
-        # self.__budget = self.__budget_scrollbar.value
-
         self.__city_quantity_value_label.text = (f"{self.__city_quantity}")
-        # self.__budget_value_label.text = (f"{self.__budget}$")
-        # self.__tab_parametres[0] = self.__city_number
-        # self.__tab_parametres[1] = self.__budget
-        self.problem_definition
+        
+
+    def __update_city_selection(self):
+        self.__city_name_text_label.text = self.__cities[self.__city_selection_combobox.current_index].nom
+
+        self.__city_x_coordinate_scrollbar.set_value = self.__cities[self.__city_selection_combobox.current_index].x
+        self.__city_y_coordinate_scrollbar.set_value = self.__cities[self.__city_selection_combobox.current_index].y
+        self.__city_radius_scrollbar.set_value = self.__cities[self.__city_selection_combobox.current_index].radius
+
+        self.__city_x_coordinate_scrollbar.value = self.__cities[self.__city_selection_combobox.current_index].x
+        self.__city_y_coordinate_scrollbar.value = self.__cities[self.__city_selection_combobox.current_index].y
+        self.__city_radius_scrollbar.value = self.__cities[self.__city_selection_combobox.current_index].radius
+
+        self.__city_x_coordinate_label.text = f"{self.__cities[self.__city_selection_combobox.current_index].x}"
+        self.__city_y_coordinate_label.text = f"{self.__cities[self.__city_selection_combobox.current_index].y}"
+        self.__city_radius_label.text = f"{self.__cities[self.__city_selection_combobox.current_index].radius}"
+
+    def __update_scroll_selection(self):
+        
+        self.__cities[self.__city_selection_combobox.current_index].x = self.__city_x_coordinate_scrollbar.value
+        # self.__cities[self.__city_selection_combobox.current_index][2]  = self.__city_y_coordinate_scrollbar.value
+        # self.__cities[self.__city_selection_combobox.current_index][3]  = self.__city_radius_scrollbar.value
+
+        self.__city_x_coordinate_label.text = f"{self.__city_x_coordinate_scrollbar.value}"
+        self.__city_y_coordinate_label.text = f"{self.__city_y_coordinate_scrollbar.value}"
+        self.__city_radius_label.text = f"{self.__city_radius_scrollbar.value}"
+        
+        self.__tab_parametres[3] = self.__cities
+        self.__find_total_nb_of_each_tower()
 
 
+    def __define_domain_names(self, tableau_tour):
+
+        nb_tours = tableau_tour[0] + tableau_tour[1] + tableau_tour[2] + tableau_tour[3]
+        tableau_towers = np.zeros((nb_tours * 2)).astype(str)
+        print(tableau_towers)
+
+        for i in range(nb_tours * 2):
+            current_tower = int(i/2+1)
+            if i < tableau_tour[0] * 2:
+                if i % 2 == 0:
+                    
+                    tableau_towers[i]="Tiny Tower" + str(current_tower) + "Translation X"
+                else:
+                    tableau_towers[i]=(f"Tiny Tower{str(current_tower)} Translation Y")
+            elif i < tableau_tour[0] * 2 + tableau_tour[1] * 2:
+                current_tower -= tableau_tour[0]
+                if i % 2 == 0:
+                    tableau_towers[i]=(f"Small Tower{str(current_tower)} Translation X")
+                else:
+                    tableau_towers[i]=(f"Small Tower{str(current_tower)} Translation Y")
+            elif i < tableau_tour[0] * 2 + tableau_tour[1] * 2 + tableau_tour[2] * 2:
+                current_tower -= (tableau_tour[0] + tableau_tour[1])
+                if i % 2 == 0:
+                    tableau_towers[i]=(f"Medium Tower{str(current_tower)} Translation X")
+                else:
+                    tableau_towers[i]=(f"Medium Tower{str(current_tower)} Translation Y")
+            elif i < tableau_tour[0] * 2 + tableau_tour[1] * 2 + tableau_tour[2] * 2 + tableau_tour[3] * 2:
+                current_tower -= (tableau_tour[0] + tableau_tour[1] + tableau_tour[2])
+                if i % 2 == 0:
+                    tableau_towers[i]=(f"Large Tower{str(current_tower)} Translation X")
+                else:
+                    tableau_towers[i]=(f"Large Tower{str(current_tower)} Translation Y")
+
+
+        self.__domain_names = tableau_towers
+
+    def __find_total_area_of_cities(self):
+        total_area = 0
+        for city in self.__cities:
+            total_area += city.area
+        return total_area
+
+    def __find_total_nb_of_each_tower(self):
+
+        aire_a_couvrir = self.__find_total_area_of_cities()
+        aire_couverte = 0
+        nb_tiny_towers = 1
+        nb_small_towers = 0
+        nb_medium_towers = 0
+        nb_large_towers = 0
+        
+        while aire_couverte < aire_a_couvrir:
+            if aire_a_couvrir-aire_couverte >  outils.LargeTower().area *4 :
+                nb_large_towers += 1
+                aire_couverte += outils.LargeTower().area
+            elif aire_a_couvrir-aire_couverte >  outils.MediumTower().area *3 :
+                nb_medium_towers += 1
+                aire_couverte += outils.MediumTower().area
+            elif  aire_a_couvrir-aire_couverte >  outils.SmallTower().area *2 :
+                nb_small_towers += 1
+                aire_couverte += outils.SmallTower().area
+            else:
+                nb_tiny_towers += 1
+                aire_couverte += outils.TinyTower().area
+        
+
+
+        self.__tab_parametres[2] = [nb_tiny_towers,nb_small_towers,nb_medium_towers,nb_large_towers]
+        self.__define_domain_names(self.__tab_parametres[2])
+
+    def _update_from_simulation(self, ga=None):
+        if ga:  # GA est available on est en cours de simulation
+            pass
+            # print(ga)
+            # print(ga.history)
+            # print(ga.history.best_solution)
+            # for chromosome in ga.population:
+            #     #dimension1 = chromosome[0]
+            #     pass
+            # chromosome = ga.history.best_solution #
+        else:  # Pas en simulation (pas de pop)
+            pass
 
     @Slot()
     def paint_event(self, event):
@@ -837,145 +826,3 @@ class CellTowerCoverageOptimizerSolutionPanel(SolutionPanel):
         painter.end()
         # self.__obstacles_coordinates.clear()
         # self.__visualization_label.pixmap = self.__visualization_pixmap
-        
-
-    def rename_city(self):
-        pass
-
-    def update_city_selection(self):
-        self.__city_name_text_label.text = self.__cities[self.__city_selection_combobox.current_index].nom
-
-        self.__city_x_coordinate_scrollbar.set_value = self.__cities[self.__city_selection_combobox.current_index].x
-        self.__city_y_coordinate_scrollbar.set_value = self.__cities[self.__city_selection_combobox.current_index].y
-        self.__city_radius_scrollbar.set_value = self.__cities[self.__city_selection_combobox.current_index].radius
-
-        self.__city_x_coordinate_scrollbar.value = self.__cities[self.__city_selection_combobox.current_index].x
-        self.__city_y_coordinate_scrollbar.value = self.__cities[self.__city_selection_combobox.current_index].y
-        self.__city_radius_scrollbar.value = self.__cities[self.__city_selection_combobox.current_index].radius
-
-        self.__city_x_coordinate_label.text = f"{self.__cities[self.__city_selection_combobox.current_index].x}"
-        self.__city_y_coordinate_label.text = f"{self.__cities[self.__city_selection_combobox.current_index].y}"
-        self.__city_radius_label.text = f"{self.__cities[self.__city_selection_combobox.current_index].radius}"
-
-    def update_scroll_selection(self):
-        
-        self.__cities[self.__city_selection_combobox.current_index].x = self.__city_x_coordinate_scrollbar.value
-        # self.__cities[self.__city_selection_combobox.current_index][2]  = self.__city_y_coordinate_scrollbar.value
-        # self.__cities[self.__city_selection_combobox.current_index][3]  = self.__city_radius_scrollbar.value
-
-        self.__city_x_coordinate_label.text = f"{self.__city_x_coordinate_scrollbar.value}"
-        self.__city_y_coordinate_label.text = f"{self.__city_y_coordinate_scrollbar.value}"
-        self.__city_radius_label.text = f"{self.__city_radius_scrollbar.value}"
-        
-        self.__tab_parametres[3] = self.__cities
-        self.find_total_nb_of_each_tower()
-
-
-    def define_domain_names(self, tableau_tour):
-        # tableau_tiny_towers = []
-        # tableau_small_towers = []
-        # tableau_medium_towers = []
-        # tableau_large_towers = []
-        nb_tours = tableau_tour[0] + tableau_tour[1] + tableau_tour[2] + tableau_tour[3]
-        tableau_towers = np.zeros((nb_tours * 2)).astype(str)
-        print(tableau_towers)
-
-        for i in range(nb_tours * 2):
-            current_tower = int(i/2+1)
-            if i < tableau_tour[0] * 2:
-                if i % 2 == 0:
-                    
-                    tableau_towers[i]="Tiny Tower" + str(current_tower) + "Translation X"
-                else:
-                    tableau_towers[i]=(f"Tiny Tower{str(current_tower)} Translation Y")
-            elif i < tableau_tour[0] * 2 + tableau_tour[1] * 2:
-                current_tower -= tableau_tour[0]
-                if i % 2 == 0:
-                    tableau_towers[i]=(f"Small Tower{str(current_tower)} Translation X")
-                else:
-                    tableau_towers[i]=(f"Small Tower{str(current_tower)} Translation Y")
-            elif i < tableau_tour[0] * 2 + tableau_tour[1] * 2 + tableau_tour[2] * 2:
-                current_tower -= (tableau_tour[0] + tableau_tour[1])
-                if i % 2 == 0:
-                    tableau_towers[i]=(f"Medium Tower{str(current_tower)} Translation X")
-                else:
-                    tableau_towers[i]=(f"Medium Tower{str(current_tower)} Translation Y")
-            elif i < tableau_tour[0] * 2 + tableau_tour[1] * 2 + tableau_tour[2] * 2 + tableau_tour[3] * 2:
-                current_tower -= (tableau_tour[0] + tableau_tour[1] + tableau_tour[2])
-                if i % 2 == 0:
-                    tableau_towers[i]=(f"Large Tower{str(current_tower)} Translation X")
-                else:
-                    tableau_towers[i]=(f"Large Tower{str(current_tower)} Translation Y")
-
-        # for i in range(self.__tableau_tours[1] * 2):
-        #     if i % 2 == 0:
-        #         tableau_towers.append(f"Small Tower{i+1} Translation X")
-        #     else:
-        #         tableau_towers.append(f"Small Tower{i+1} Translation Y")
-        # for i in range(self.__tableau_tours[2] * 2):
-        #     if i % 2 == 0:
-        #         tableau_towers.append(f"Medium Tower{i+1} Translation X")
-        #     else:
-        #         tableau_towers.append(f"Medium Tower{i+1} Translation Y")
-        # for i in range(self.__tableau_tours[3] * 2):
-        #     if i % 2 == 0:
-        #         tableau_towers.append(f"Large Tower{i+1} Translation X")
-        #     else:
-        #         tableau_towers.append(f"Large Tower{i+1} Translation Y")
-
-        # tableau_towers = [tableau_tiny_towers, tableau_small_towers, tableau_medium_towers, tableau_large_towers]
-        # tableau_towers.append(tableau_tiny_towers)
-        # tableau_towers.append(tableau_small_towers)
-        # tableau_towers.append(tableau_medium_towers)
-        # tableau_towers.append(tableau_large_towers)
-
-
-        self.__domain_names = tableau_towers
-
-    def find_total_area_of_cities(self):
-        total_area = 0
-        for city in self.__cities:
-            total_area += city.area
-        return total_area
-
-    def find_total_nb_of_each_tower(self):
-
-        aire_a_couvrir = self.find_total_area_of_cities()
-        aire_couverte = 0
-        nb_tiny_towers = 1
-        nb_small_towers = 0
-        nb_medium_towers = 0
-        nb_large_towers = 0
-        
-        while aire_couverte < aire_a_couvrir:
-            if aire_a_couvrir-aire_couverte >  outils.LargeTower().area *4 :
-                nb_large_towers += 1
-                aire_couverte += outils.LargeTower().area
-            elif aire_a_couvrir-aire_couverte >  outils.MediumTower().area *3 :
-                nb_medium_towers += 1
-                aire_couverte += outils.MediumTower().area
-            elif  aire_a_couvrir-aire_couverte >  outils.SmallTower().area *2 :
-                nb_small_towers += 1
-                aire_couverte += outils.SmallTower().area
-            else:
-                nb_tiny_towers += 1
-                aire_couverte += outils.TinyTower().area
-        
-
-       
-        self.__nb_total_tours = nb_tiny_towers + nb_small_towers + nb_medium_towers + nb_large_towers
-        self.__tab_parametres[2] = [nb_tiny_towers,nb_small_towers,nb_medium_towers,nb_large_towers]
-        self.define_domain_names(self.__tab_parametres[2])
-
-    def _update_from_simulation(self, ga=None):
-        if ga:  # GA est available on est en cours de simulation
-            pass
-            # print(ga)
-            # print(ga.history)
-            # print(ga.history.best_solution)
-            # for chromosome in ga.population:
-            #     #dimension1 = chromosome[0]
-            #     pass
-            # chromosome = ga.history.best_solution #
-        else:  # Pas en simulation (pas de pop)
-            pass

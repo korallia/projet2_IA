@@ -104,16 +104,20 @@ class ShapeTransformationOptimizerSolution:
 
 class CellTowerCoverageOptimizerSolution:
     def __init__(self, tab_parametres, domain_names):
-        self.tab_parametres = tab_parametres
-        self.__nb_tiny_towers = self.tab_parametres[2][0]
-        self.__nb_small_tower = self.tab_parametres[2][1]
-        self.__nb_medium_tower = self.tab_parametres[2][2]
-        self.__nb_large_tower = self.tab_parametres[2][3]
+        self.__tab_parametres = tab_parametres
+        self.__nb_tiny_towers = self.__tab_parametres[2][0]
+        self.__nb_small_tower = self.__tab_parametres[2][1]
+        self.__nb_medium_tower = self.__tab_parametres[2][2]
+        self.__nb_large_tower = self.__tab_parametres[2][3]
         self.__nb_total_dimensions = 2*(self.__nb_tiny_towers + self.__nb_small_tower + self.__nb_medium_tower + self.__nb_large_tower)
         self.__domain_names = domain_names
-        self.range = self.calculer_range()
-        self.domaine = Domains(self.range,  self.__domain_names)
-        self.probleme_definition = ProblemDefinition(self.domaine, self)
+        self.__range = self.calculer_range()
+        self.__domaine = Domains(self.__range,  self.__domain_names)
+        self.__probleme_definition = ProblemDefinition(self.__domaine, self)
+
+    @property
+    def probleme_definition(self):
+        return self.__probleme_definition
 
     def calculer_range(self):
         if (len(self.__domain_names) == 0):
@@ -125,10 +129,10 @@ class CellTowerCoverageOptimizerSolution:
             for current_dimension in range(self.__nb_total_dimensions):
                 if current_dimension % 2 == 0:
                     arange[current_dimension,0] = 0
-                    arange[current_dimension,1] = self.tab_parametres[0] #Canvas_width
+                    arange[current_dimension,1] = self.__tab_parametres[0] #Canvas_width
                 else:
                     arange[current_dimension,0] = 0
-                    arange[current_dimension,1] = self.tab_parametres[1] #canvas_height
+                    arange[current_dimension,1] = self.__tab_parametres[1] #canvas_height
 
         return arange
 
@@ -159,12 +163,12 @@ class CellTowerCoverageOptimizerSolution:
 
         #Calcultate total area of coverage by towers
         area_intersection_between_cities_and_towers = 0
-        for index_ville in range(len(self.tab_parametres[3])):
+        for index_ville in range(len(self.__tab_parametres[3])):
             for index_tour in range(len(tableau_tours)):
                 if index_ville == index_tour:
                     continue
 
-                area_intersection_between_cities_and_towers += outils.intersection_area(self.tab_parametres[3][index_ville], tableau_tours[index_tour])
+                area_intersection_between_cities_and_towers += outils.intersection_area(self.__tab_parametres[3][index_ville], tableau_tours[index_tour])
 
         #Remove overlapping area in order to not calculate it twice
         if area_intersection_between_cities_and_towers - area_intersection_between_towers > 0:
